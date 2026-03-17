@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 04624f04213cc2344889700782357c89
+=======
+guid: 9c53962885c2c4f449125a979d6ad240
+>>>>>>> 95fa30c (feat: add basic movement, stamina control, slow walk; fix: jumps)
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
