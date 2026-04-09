@@ -16,7 +16,7 @@ public class PlayerController_v2 : MonoBehaviour
     [SerializeField] private float mouseSensitivity = .1f;
     [SerializeField] private float animationDampTime = 0.1f;
     [SerializeField] private float jumpHeight = 1f;
-    [SerializeField] private float jumpColliderHeight = 2.2f;
+    [SerializeField] private float jumpColliderHeight = 1.2f;
 
     [Header("Stamina UI")]
     [SerializeField] private GameObject staminaBarParent; //object to hide/show
@@ -45,6 +45,20 @@ public class PlayerController_v2 : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.15f;
     [SerializeField] private float jumpBufferTime = 0.15f;
 
+    [Header("Mana Settings")]
+    [SerializeField] private float maxMana = 100f;
+    [SerializeField] private float manaRegenRate = 5f;
+    private float currentMana;
+
+    [Header("Spell Settings")]
+    [SerializeField] private SpellData slot1Spell;
+    [SerializeField] private Image spell1CooldownImage;
+    [SerializeField] private InputActionReference selectSpell1Action;
+    [SerializeField] private InputActionReference attackAction;
+
+    private SpellData selectedSpell;
+    private float lastCastTime = float.NegativeInfinity;
+    
     
 
     private Animator animator;
@@ -109,6 +123,9 @@ public class PlayerController_v2 : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         currentStamina = maxStamina;
+        currentMana = maxMana;
+
+        spell1CooldownImage.fillAmount = 0;
 
         originalColliderHeight = controller.height;
         originalColliderCenter = controller.center;
@@ -133,7 +150,7 @@ public class PlayerController_v2 : MonoBehaviour
         }
         else if (walkAction.action.WasPressedThisFrame() && isCtrlPressed)
         {
-            isCtrlPressed = false; 
+            isCtrlPressed = false;
         }
             
 
@@ -171,6 +188,10 @@ public class PlayerController_v2 : MonoBehaviour
         HandleJump();
         HandleAirMovement();
         CheckGround();
+
+        RegenerateMana();
+        HandleSpellSelection();
+        HandleSpellCasting();
 
         if (isFPS)
         {
@@ -225,8 +246,6 @@ public class PlayerController_v2 : MonoBehaviour
             currentStamina -= jumpStaminaPenalty;
 
             horizontalMomentum = new Vector3(controller.velocity.x, 0f, controller.velocity.z);
-
-            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
             isInAir = true;
 
             jumpGraceTimer = .25f; //Allow a short window after jump to still be considered "jumping" for animation purposes
@@ -258,7 +277,7 @@ public class PlayerController_v2 : MonoBehaviour
 
     private void HandleAnimations(bool isMoving, bool isSprinting, Vector2 input, bool isFPS, float speedMultiplier)
     {
-        if (!isMoving)
+        if (!isMoving && !isInAir)
             afkTime += Time.deltaTime;
         else
             afkTime = 0f;
@@ -311,7 +330,7 @@ public class PlayerController_v2 : MonoBehaviour
 
     public void LandJumpPhysics()
     {
-        useRootMotion = true;
+        useRootMotion = true; 
     }
 
     private void OnAnimatorMove()
@@ -364,6 +383,70 @@ public class PlayerController_v2 : MonoBehaviour
         {
             staminaFillImage.fillAmount = currentStamina / maxStamina;
         }
+    }
+
+    private void RegenerateMana()
+    {
+        if (currentMana < maxMana)
+        {
+            currentMana += manaRegenRate * Time.deltaTime;
+        }
+    }
+
+    private void HandleSpellSelection()
+    {
+        if (selectSpell1Action.action.WasPressedThisFrame())
+        {
+            selectedSpell = slot1Spell;
+
+            //Debug
+            Debug.Log("Spell selected: " + selectedSpell);
+        }
+    }
+
+    private void HandleSpellCasting()
+    {
+        if (selectedSpell == null) return;
+
+        float timeSinceCast = Time.time - lastCastTime;
+
+        if (spell1CooldownImage != null)
+        {
+            float cooldownProgress = Mathf.Clamp01(1 - (timeSinceCast / selectedSpell.cooldown));
+            spell1CooldownImage.fillAmount = cooldownProgress;
+        }
+
+        if (attackAction.action.WasPressedThisFrame())
+        {
+            if (timeSinceCast >= selectedSpell.cooldown && currentMana >= selectedSpell.cooldown)
+            {
+                CastSelectedSpell();
+            }
+        }
+    }
+
+    private void CastSelectedSpell()
+    {
+                currentMana -= selectedSpell.manaCost;
+        lastCastTime = Time.time;
+
+        animator.SetTrigger("CastSpell");
+
+        Ray ray = mainCamera.GetComponent<Camera>().ViewportPointToRay(new Vector3(.5f, .5f, 0));
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(100f);
+        }
+
+        Vector3 castDirection = (targetPoint - transform.position + transform.up).normalized;
+
+        Instantiate(selectedSpell.spellPrefab, transform.position + transform.up, Quaternion.LookRotation(castDirection));
     }
 
     private void CheckGround()
