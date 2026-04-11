@@ -113,6 +113,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "UltimativeAbilityCast",
+                    "type": "Button",
+                    "id": "a8112018-4b35-472e-a27f-c63782e156b9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -531,6 +540,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "SelectSpell1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1631b4a-93e6-4b69-a21a-2fce0ccd6558",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "UltimativeAbilityCast",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -21,10 +21,10 @@ public class PlayerAnimations : MonoBehaviour
     /// <summary>
     /// Updates all movement-related parameters in the Animator Blend Tree.
     /// </summary>
-    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS)
+    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isAiming)
     {
         // Handle AFK timer logic
-        if (!isMoving && isGrounded)
+        if (!isMoving && isGrounded && !isSpellSelected)
             afkTime += Time.deltaTime;
         else
             afkTime = 0f;
@@ -32,9 +32,9 @@ public class PlayerAnimations : MonoBehaviour
         float targetForward;
         float targetStrafe;
 
-        if (isFPS)
+        if (isFPS || isAiming)
         {
-            // In First-Person, forward/backward and strafing are separate values
+            // In First-Person or aiming mode, forward/backward and strafing are separate values
             targetForward = input.y * speedMultiplier;
             targetStrafe = input.x * speedMultiplier;
         }

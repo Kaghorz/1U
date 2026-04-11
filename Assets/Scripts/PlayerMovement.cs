@@ -150,6 +150,19 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void ApplyAimRotation(Transform cam, float mouseX)
+    {
+        Vector3 cameraForward = cam.forward;
+        cameraForward.y = 0f;
+
+        //if (cameraForward.sqrMagnitude > 0.001f)
+        //{
+        //    Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //}
+        transform.Rotate(mouseX * Vector3.up * mouseSensitivity);
+    }
+
     public void ApplyFPSRotation(float mouseX)
     {
         // Rotate character based on mouse horizontal axis

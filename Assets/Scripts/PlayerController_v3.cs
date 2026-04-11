@@ -11,6 +11,7 @@ public class PlayerController_v3 : MonoBehaviour
     [Header("Core References")]
     [SerializeField] private CinemachineCamera fpsCamera; // Reference to determine if player is in first-person mode
     [SerializeField] private Transform mainCamera; // Reference for direction-based movement calculations
+    [SerializeField] private CinemachineCamera aimCamera; // Camera to switch to when aiming
 
     [Header("Input Actions")]
     [SerializeField] private InputActionReference moveAction;
@@ -20,6 +21,7 @@ public class PlayerController_v3 : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference selectSpell1Action;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference hollowPurpleAction;
 
     // References to specialized modules
     private PlayerMovement movement;
@@ -48,6 +50,7 @@ public class PlayerController_v3 : MonoBehaviour
         walkAction.action.Enable();
         selectSpell1Action.action.Enable();
         attackAction.action.Enable();
+        hollowPurpleAction.action.Enable();
     }
 
     private void OnDisable()
@@ -60,6 +63,7 @@ public class PlayerController_v3 : MonoBehaviour
         walkAction.action.Disable();
         selectSpell1Action.action.Disable();
         attackAction.action.Disable();
+        hollowPurpleAction.action.Disable();
     }
 
     private void Update()
@@ -69,6 +73,7 @@ public class PlayerController_v3 : MonoBehaviour
         bool isMoving = rawInput.magnitude > 0.1f;
         bool isFPS = fpsCamera.IsLive;
         bool isShiftPressed = sprintAction.action.IsPressed();
+        bool isAiming = combat.IsSpellSelected;
 
         // 2. Handle walking toggle logic
         if (walkAction.action.WasPressedThisFrame())
@@ -90,15 +95,24 @@ public class PlayerController_v3 : MonoBehaviour
             speedMultiplier = 0.5f;
         }
 
+        aimCamera.Priority = isAiming ? 20 : 5;
+
         // 4. Update physical movement and rotation
         movement.ProcessGravity();
         movement.CheckGroundStatus();
         movement.SmoothlyResizeCollider();
 
+        
+
         if (isFPS)
         {
             float mouseX = lookAction.action.ReadValue<Vector2>().x;
             movement.ApplyFPSRotation(mouseX);
+        }
+        else if (isAiming)
+        {
+            float mouseX = lookAction.action.ReadValue<Vector2>().x;
+            movement.ApplyAimRotation(mainCamera, mouseX);
         }
         else if (isMoving)
         {
@@ -120,7 +134,26 @@ public class PlayerController_v3 : MonoBehaviour
         // 7. Handle Combat and Spellcasting
         if (selectSpell1Action.action.WasPressedThisFrame())
         {
-            combat.SelectSpellSlot1();
+            if (combat.selectedSpell == combat.GetSlot1Spell())
+            {
+                combat.DeselectSpell();
+            }
+            else
+            {
+                combat.SelectSpellSlot1();
+            }
+                
+        }
+        else if (hollowPurpleAction.action.WasPressedThisFrame())
+        {
+            if (combat.selectedSpell == combat.GetSlot2Spell())
+            {
+                combat.DeselectSpell();
+            }
+            else
+            {
+                combat.SelectSpellHollowPurple();
+            }
         }
 
         if (attackAction.action.WasPressedThisFrame())
@@ -129,7 +162,7 @@ public class PlayerController_v3 : MonoBehaviour
         }
 
         // 8. Update Animations
-        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS);
+        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isAiming);
     }
 
     private void OnAnimatorMove()

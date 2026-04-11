@@ -118,6 +118,8 @@ public class PlayerStats : MonoBehaviour
         return false;
     }
 
+    public bool CanConsumeMana(float amount) => currentMana >= amount;
+
     /// <summary>
     /// Provides a simple check to see if the player has any stamina remaining.
     /// </summary>
