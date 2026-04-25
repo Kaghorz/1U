@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HollowPurple
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
   spellName: HollowPurple
-  manaCost: 1
-  cooldown: 1
+  manaCost: 50
+  cooldown: 2
   castTime: 0
   spellPrefab: {fileID: 8254389753262973237, guid: bde7e945205bbb0429e0f12ae003ba9b, type: 3}
   spellIcon: {fileID: 0}

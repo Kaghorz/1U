@@ -79,4 +79,9 @@ public class PlayerAnimations : MonoBehaviour
             animator.SetTrigger(triggerHash);
         }
     }
+
+    public bool isCastingHollowPurple() 
+    {
+        return animator.GetCurrentAnimatorStateInfo(1).IsName("HollowPurple");
+    }
 }

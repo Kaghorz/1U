@@ -33,7 +33,8 @@ public class PlayerCombat : MonoBehaviour
     private Vector3 savedTargetPoint; // To remember where we aimed when the animation started
     private CinemachineImpulseSource impulseSource; // For camera shake on impact
 
-    private static readonly int CastTriggerHash = Animator.StringToHash("castSpell");
+    private static readonly int CastTriggerHollowPurpleHash = Animator.StringToHash("castHollowPurple");
+    private static readonly int CastTriggerFireballHash = Animator.StringToHash("castFireball");
     public bool IsSpellSelected => selectedSpell != null;
 
     private void Awake()
@@ -102,7 +103,15 @@ public class PlayerCombat : MonoBehaviour
     private void ExecuteCast(Transform mainCamera)
     {
         lastCastTime = Time.time;
-        animator.SetTrigger(CastTriggerHash); // Trigger the animation
+        if (selectedSpell == slot1Spell)
+        {
+            animator.SetTrigger(CastTriggerFireballHash); // Trigger the Fireball animation
+
+        }
+        else if (selectedSpell == slot2Spell)
+        {
+            animator.SetTrigger(CastTriggerHollowPurpleHash); // Trigger the Hollow Purple animation
+        }
 
         // Calculate aiming point immediately so the projectile knows where to go later
         Ray ray = mainCamera.GetComponent<Camera>().ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -116,6 +125,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    // The Hollow Purple casting process
     // Called by Animation Event at the start
     public void OnSpawnBlue()
     {
@@ -147,12 +157,6 @@ public class PlayerCombat : MonoBehaviour
             activePurple.transform.SetParent(null); // Detach from player
 
             Vector3 launchDir = (savedTargetPoint - activePurple.transform.position).normalized;
-
-            //Trigger camera shake on launch
-            //if (impulseSource != null)
-            //{
-            //    impulseSource.GenerateImpulse();
-            //}
 
             // Setup the projectile movement
             HollowPurpleProjectile projectileScript = activePurple.GetComponent<HollowPurpleProjectile>();

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
@@ -98,18 +99,22 @@ public class PlayerMovement : MonoBehaviour
         //Vector3 jumpColliderOffset = Vector3.zero;
         //jumpColliderOffset.y = hasJumped ? controller.height / 2f : 0f;
         
-        Vector3 origin = transform.position + Vector3.up * 0.1f;
+        Vector3 origin = transform.position + Vector3.up * 0.2f;
         Vector3 left = origin - transform.right * groundCheckOffset;
         Vector3 right = origin + transform.right * groundCheckOffset;
+        Vector3 forward = origin + transform.forward * groundCheckOffset;
+        Vector3 back = origin - transform.forward * groundCheckOffset;
 
         // Multi-raycast for stability on ledges
         bool centerHit = Physics.Raycast(origin, Vector3.down, groundCheckDistance, groundLayer);
         bool leftHit = Physics.Raycast(left, Vector3.down, groundCheckDistance, groundLayer);
         bool rightHit = Physics.Raycast(right, Vector3.down, groundCheckDistance, groundLayer);
+        bool forwardHit = Physics.Raycast(forward, Vector3.down, groundCheckDistance, groundLayer);
+        bool backHit = Physics.Raycast(back, Vector3.down, groundCheckDistance, groundLayer);
 
-        IsGrounded = centerHit || leftHit || rightHit;
+        IsGrounded = centerHit || leftHit || rightHit || forwardHit || backHit;
         //Debug
-        Debug.Log("Grounded: centerHit=" + centerHit + ", leftHit=" + leftHit + ", rightHit=" + rightHit);
+        Debug.Log("Grounded: centerHit=" + centerHit + ", leftHit=" + leftHit + ", rightHit=" + rightHit + ", forwardHit=" + forwardHit + ", backHit=" + backHit);
 
         if (IsGrounded)
         {
@@ -209,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void ExecuteRootMotion(Vector3 animationDelta)
+    public void ExecuteRootMotion(Vector3 animationDelta, Vector3 moveDirection, float speedMultiplier)
     {
         Vector3 velocity;
 
@@ -217,14 +222,29 @@ public class PlayerMovement : MonoBehaviour
         if (isInAir)
         {
             velocity = horizontalMomentum * Time.deltaTime;
-            velocity.y = verticalVelocity * Time.deltaTime;
         }
         else
         {
-            velocity = animationDelta;
-            velocity.y = verticalVelocity * Time.deltaTime;
+            // 1. Calculate how fast the animation wants to move
+            float animSpeed = animationDelta.magnitude / Time.deltaTime;
+
+            // 2. Define a "Reference Speed" (Your forward run speed)
+            // Usually, a Mixamo run is around 4-5.5 units per second.
+            float referenceSpeed = 3.5f * speedMultiplier;
+
+            // 3. If the user is pushing the stick, but the animation speed is too low
+            if (moveDirection.magnitude > 0.1f && animSpeed < referenceSpeed)
+            {
+                // Inject the missing speed manually
+                velocity = moveDirection.normalized * referenceSpeed * Time.deltaTime;
+            }
+            else
+            {
+                velocity = animationDelta;
+            }
         }
 
+        velocity.y = verticalVelocity * Time.deltaTime;
         controller.Move(velocity);
     }
 
@@ -275,12 +295,16 @@ public class PlayerMovement : MonoBehaviour
         //Vector3 jumpColliderOffset = Vector3.zero;
         //jumpColliderOffset.y = hasJumped ? controller.height / 2f : 0f;
 
-        Vector3 origin = transform.position + Vector3.up * 0.1f;
+        Vector3 origin = transform.position + Vector3.up * 0.2f;
         Vector3 left = origin - transform.right * groundCheckOffset;
         Vector3 right = origin + transform.right * groundCheckOffset;
+        Vector3 forward = origin + transform.forward * groundCheckOffset;
+        Vector3 back = origin - transform.forward * groundCheckOffset;
 
         Gizmos.DrawLine(origin, origin + Vector3.down * groundCheckDistance);
         Gizmos.DrawLine(left, left + Vector3.down * groundCheckDistance);
         Gizmos.DrawLine(right, right + Vector3.down * groundCheckDistance);
+        Gizmos.DrawLine(forward, forward + Vector3.down * groundCheckDistance);
+        Gizmos.DrawLine(back, back + Vector3.down * groundCheckDistance);
     }
 }
