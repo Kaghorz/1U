@@ -25,8 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private float jumpBufferTimer;
 
     [Header("Ground Check")]
-    [SerializeField] private float groundCheckDistance = 0.25f;
-    [SerializeField] private float groundCheckOffset = 0.25f;
+    [SerializeField] private float groundCheckDistance = 0.35f;
+    [SerializeField] private float groundCheckOffset = 0.4f;
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Air Control")]
@@ -47,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 horizontalMomentum;
     private bool isInAir = false;
     private float coyoteTimer;
-    private bool hasJumped = false;
 
     // Stored original values for collider resetting
     private float originalColliderHeight;
@@ -96,9 +95,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        //Vector3 jumpColliderOffset = Vector3.zero;
-        //jumpColliderOffset.y = hasJumped ? controller.height / 2f : 0f;
-        
         Vector3 origin = transform.position + Vector3.up * 0.2f;
         Vector3 left = origin - transform.right * groundCheckOffset;
         Vector3 right = origin + transform.right * groundCheckOffset;
@@ -121,7 +117,6 @@ public class PlayerMovement : MonoBehaviour
             coyoteTimer = coyoteTime;
             isInAir = false;
             horizontalMomentum = Vector3.zero;
-            hasJumped = false;
 
             //start growing the collider back to normal size
             targetColliderHeight = originalColliderHeight;
@@ -277,8 +272,6 @@ public class PlayerMovement : MonoBehaviour
             controller.height / 2f, 
             originalColliderCenter.z
         );
-
-        hasJumped = true;
 
         verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 

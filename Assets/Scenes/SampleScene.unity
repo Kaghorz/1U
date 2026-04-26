@@ -640,7 +640,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 790359941}
+  m_Father: {fileID: 1035542552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &272411694
 GameObject:
@@ -848,6 +848,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b92373a7bf86a7f4b948208d772aa39f, type: 2}
     - target: {fileID: 8055201448395516481, guid: c530810d07973b3438f76d7f84864971, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055201448395516481, guid: c530810d07973b3438f76d7f84864971, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 2b761048fea65c54e9e3be458b1435e9, type: 2}
@@ -855,10 +859,10 @@ PrefabInstance:
     - {fileID: 5866666021909216657, guid: c530810d07973b3438f76d7f84864971, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7535211588738896717, guid: c530810d07973b3438f76d7f84864971, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: c530810d07973b3438f76d7f84864971, type: 3}
       insertIndex: -1
       addedObject: {fileID: 261102313}
-    - targetCorrespondingSourceObject: {fileID: 8782159282777548371, guid: c530810d07973b3438f76d7f84864971, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: c530810d07973b3438f76d7f84864971, type: 3}
       insertIndex: -1
       addedObject: {fileID: 706820838}
     m_AddedComponents: []
@@ -892,7 +896,7 @@ Transform:
   m_GameObject: {fileID: 312326151}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.000038146973, y: 1.7209203, z: -0.0020291805}
+  m_LocalPosition: {x: 0, y: 1.7839999, z: 0.1500001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -918,7 +922,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 1411085334}
+    TrackingTarget: {fileID: 873670659}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -1043,7 +1047,7 @@ GameObject:
   - component: {fileID: 330585547}
   - component: {fileID: 330585549}
   m_Layer: 7
-  m_Name: Main Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1117,7 +1121,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.000038146973, y: 1.7209203, z: -0.0020291805}
+  m_LocalPosition: {x: 0, y: 1.7839999, z: 0.1500001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1779,7 +1783,7 @@ MonoBehaviour:
   jumpStaminaPenalty: 20
   coyoteTime: 0.15
   jumpBufferTime: 0.15
-  groundCheckDistance: 0.25
+  groundCheckDistance: 0.35
   groundCheckOffset: 0.4
   groundLayer:
     serializedVersion: 2
@@ -2076,11 +2080,6 @@ MonoBehaviour:
   fpsCamera: {fileID: 312326153}
   tpsCamera: {fileID: 1258327657}
   switchAction: {fileID: -7960673571847101580, guid: 052faaac586de48259a63d0c4782560b, type: 3}
---- !u!4 &633241562 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8782159282777548371, guid: c530810d07973b3438f76d7f84864971, type: 3}
-  m_PrefabInstance: {fileID: 310563255}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &706820837
 GameObject:
   m_ObjectHideFlags: 0
@@ -2110,13 +2109,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 633241562}
+  m_Father: {fileID: 1035542552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &790359941 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7535211588738896717, guid: c530810d07973b3438f76d7f84864971, type: 3}
-  m_PrefabInstance: {fileID: 310563255}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &792104316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,11 +2975,6 @@ MonoBehaviour:
     FrequencyGain: 20
     Duration: 1
     m_NoiseOffsets: {x: -804.67725, y: -573.86084, z: -869.7953}
---- !u!4 &1411085334 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1062023463908538661, guid: c530810d07973b3438f76d7f84864971, type: 3}
-  m_PrefabInstance: {fileID: 310563255}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1540054182
 GameObject:
   m_ObjectHideFlags: 0

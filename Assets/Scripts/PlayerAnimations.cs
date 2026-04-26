@@ -18,9 +18,7 @@ public class PlayerAnimations : MonoBehaviour
     private static readonly int IsSprintingHash = Animator.StringToHash("isSprinting");
     private static readonly int AfkTimeHash = Animator.StringToHash("afkTime");
 
-    /// <summary>
-    /// Updates all movement-related parameters in the Animator Blend Tree.
-    /// </summary>
+
     public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isAiming)
     {
         // Handle AFK timer logic
@@ -31,6 +29,10 @@ public class PlayerAnimations : MonoBehaviour
 
         float targetForward;
         float targetStrafe;
+
+        // Determine the target weight for aiming animations
+        float targetWeight = isAiming ? 1f : 0f; // Full weight for aiming, no weight for normal movement
+        
 
         if (isFPS || isAiming)
         {
@@ -57,6 +59,9 @@ public class PlayerAnimations : MonoBehaviour
             animator.SetFloat(AfkTimeHash, afkTime);
             animator.SetFloat(ForwardHash, targetForward, animationDampTime, Time.deltaTime);
             animator.SetFloat(StrafeHash, targetStrafe, animationDampTime, Time.deltaTime);
+
+            float currentWeight = animator.GetLayerWeight(1); // IMPORTANT: Assuming layer 1 is for aiming
+            animator.SetLayerWeight(1, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
         }
     }
 

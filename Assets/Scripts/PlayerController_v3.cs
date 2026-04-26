@@ -92,6 +92,7 @@ public class PlayerController_v3 : MonoBehaviour
 
         bool isMoving = rawInput.magnitude > 0.1f;
         bool isFPS = fpsCamera.IsLive;
+        bool isTPS = tpsCamera.IsLive;
         bool isShiftPressed = sprintAction.action.IsPressed();
         bool isAiming = combat.IsSpellSelected;
 
@@ -140,7 +141,7 @@ public class PlayerController_v3 : MonoBehaviour
             float mouseX = lookAction.action.ReadValue<Vector2>().x;
             movement.ApplyAimRotation(mainCamera, mouseX);
         }
-        else if (isMoving)
+        else if (isTPS)
         {
             CancelTPSOrbitalCameraRecentering();
             movement.ApplyTPSRotation(rawInput, mainCamera);

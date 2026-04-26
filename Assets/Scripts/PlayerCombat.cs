@@ -53,9 +53,6 @@ public class PlayerCombat : MonoBehaviour
         HandleCooldownUI();
     }
 
-    /// <summary>
-    /// Selects the spell in the first slot, making it ready to cast.
-    /// </summary>
     public void SelectSpellSlot1()
     {
         if (slot1Spell != null)
