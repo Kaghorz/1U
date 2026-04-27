@@ -23,6 +23,7 @@ public class PlayerController_v3 : MonoBehaviour
     [SerializeField] private InputActionReference selectSpell1Action;
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private InputActionReference hollowPurpleAction;
+    [SerializeField] private InputActionReference enableFightModeAction;
 
     // References to specialized modules
     private PlayerMovement movement;
@@ -33,6 +34,8 @@ public class PlayerController_v3 : MonoBehaviour
     private bool isCtrlPressed = false; // Toggle state for slow walking
     private Vector3 curMoveDir;
     float speedMultiplier;
+    private bool isFightModeEnabled = false;
+    private bool isCastingSpell = false;
 
     private void Awake()
     {
@@ -57,6 +60,7 @@ public class PlayerController_v3 : MonoBehaviour
         lookAction.action.Enable();
         jumpAction.action.Enable();
         walkAction.action.Enable();
+        enableFightModeAction.action.Enable();
         selectSpell1Action.action.Enable();
         attackAction.action.Enable();
         hollowPurpleAction.action.Enable();
@@ -70,6 +74,7 @@ public class PlayerController_v3 : MonoBehaviour
         lookAction.action.Disable();
         jumpAction.action.Disable();
         walkAction.action.Disable();
+        enableFightModeAction.action.Disable();
         selectSpell1Action.action.Disable();
         attackAction.action.Disable();
         hollowPurpleAction.action.Disable();
@@ -77,36 +82,34 @@ public class PlayerController_v3 : MonoBehaviour
 
     private void Update()
     {
-        // 1. Gather raw input values
+        // Gather raw input values
         Vector2 rawInput = moveAction.action.ReadValue<Vector2>();
 
-        //
         Vector3 camForward = mainCamera.forward;
         Vector3 camRight = mainCamera.right;
         camForward.y = 0;
         camRight.y = 0;
 
         curMoveDir = (camForward.normalized * rawInput.y + camRight.normalized * rawInput.x).normalized;
-        //
-
-
+       
         bool isMoving = rawInput.magnitude > 0.1f;
         bool isFPS = fpsCamera.IsLive;
         bool isTPS = tpsCamera.IsLive;
         bool isShiftPressed = sprintAction.action.IsPressed();
-        bool isAiming = combat.IsSpellSelected;
 
-        // 2. Handle walking toggle logic
+        // Handle walking toggle logic
         if (walkAction.action.WasPressedThisFrame())
         {
             isCtrlPressed = !isCtrlPressed;
         }
 
-        // 3. Determine movement state and speed multipliers
+  
+
+        // Determine movement state and speed multipliers
         speedMultiplier = 1f; // Default is running
         bool isSprinting = false;
 
-        if (combat.IsSpellSelected)
+        if (isCastingSpell || isFightModeEnabled)
         {
             speedMultiplier = .5f;
         }
@@ -120,35 +123,28 @@ public class PlayerController_v3 : MonoBehaviour
             speedMultiplier = 0.5f;
         }
 
-        aimCamera.Priority = isAiming && !isFPS ? 20 : 5;
+        aimCamera.Priority = (isCastingSpell || isFightModeEnabled) && !isFPS ? 20 : 5;
 
-        // 4. Update physical movement and rotation
+        // Update physical movement and rotation
         movement.ProcessGravity();
         movement.CheckGroundStatus();
         movement.SmoothlyResizeCollider();
 
         
-
-        if (isFPS)
+        if (isFPS || isCastingSpell || isFightModeEnabled)
         {
             RecenterTPSOrbitalCamera();
             float mouseX = lookAction.action.ReadValue<Vector2>().x;
-            movement.ApplyFPSRotation(mouseX);
-        }
-        else if (isAiming)
-        {
-            RecenterTPSOrbitalCamera();
-            float mouseX = lookAction.action.ReadValue<Vector2>().x;
-            movement.ApplyAimRotation(mainCamera, mouseX);
+            movement.ApplyMouseBasedRotation(mouseX);
         }
         else if (isTPS)
         {
             CancelTPSOrbitalCameraRecentering();
-            movement.ApplyTPSRotation(rawInput, mainCamera);
+            movement.ApplyTPSRotation(rawInput, curMoveDir);
         }
 
-        // 5. Process Jump request
-        if (jumpAction.action.WasPressedThisFrame())
+        // Process Jump request
+        if (jumpAction.action.WasPressedThisFrame() && !isCastingSpell && !isFightModeEnabled)
         {
             movement.TryJump(stats);
 
@@ -156,41 +152,61 @@ public class PlayerController_v3 : MonoBehaviour
 
         movement.HandleAirMovement(moveAction, mainCamera);
 
-        // 6. Update Resources (Stamina and Mana)
+        // Update Resources (Stamina and Mana)
         stats.TickResources(isSprinting, movement.IsGrounded);
 
-        // 7. Handle Combat and Spellcasting
+
+
+        // Handle Combat and Spellcasting
         if (selectSpell1Action.action.WasPressedThisFrame())
         {
+            isCastingSpell = true;
+            isFightModeEnabled = false;
+            Debug.Log("Exiting Fight Mode to cast a spell. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
+
             if (combat.selectedSpell == combat.GetSlot1Spell())
             {
                 combat.DeselectSpell();
+                isCastingSpell = false;
             }
             else
             {
                 combat.SelectSpellSlot1();
             }
-                
         }
         else if (hollowPurpleAction.action.WasPressedThisFrame())
         {
+            isCastingSpell = true;
+            isFightModeEnabled = false;
+            Debug.Log("Exiting Fight Mode to cast Hollow Purple. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
+
             if (combat.selectedSpell == combat.GetSlot2Spell())
             {
                 combat.DeselectSpell();
+                isCastingSpell= false;
             }
             else
             {
                 combat.SelectSpellHollowPurple();
             }
         }
-
-        if (attackAction.action.WasPressedThisFrame())
+        else if (enableFightModeAction.action.WasPressedThisFrame())
         {
-            combat.TryCastSelectedSpell(stats, mainCamera);
+            isCastingSpell = false;
+            isFightModeEnabled = !isFightModeEnabled;
+            Debug.Log("Fight Mode " + (isFightModeEnabled ? "Enabled" : "Disabled") + " | Casting Spell: " + isCastingSpell);
+        }
+        
+
+
+
+        if ((isCastingSpell || isFightModeEnabled) && attackAction.action.WasPressedThisFrame())
+        {
+            combat.TryPerformAttack(stats, mainCamera);
         }
 
         // 8. Update Animations
-        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isAiming);
+        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled);
     }
 
     private void OnAnimatorMove()

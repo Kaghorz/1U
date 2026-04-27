@@ -41,6 +41,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float colliderResizeSpeed = 2.5f;
     private float targetColliderHeight;
 
+    [Header("Other Settings")]
+    [SerializeField] private float animationSpeedMultiplier = 3.5f; // Used to sync root motion with actual movement speed
+
     // State Variables
     public bool IsGrounded { get; private set; } = true;
     private float verticalVelocity;
@@ -133,16 +136,8 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(IsGroundedHash, IsGrounded);
     }
 
-    public void ApplyTPSRotation(Vector2 input, Transform cam)
+    public void ApplyTPSRotation(Vector2 input, Vector3 desiredMoveDir)
     {
-        // Rotate character toward camera-relative movement direction
-        Vector3 camForward = cam.forward;
-        Vector3 camRight = cam.right;
-        camForward.y = 0;
-        camRight.y = 0;
-
-        Vector3 desiredMoveDir = (camForward.normalized * input.y + camRight.normalized * input.x).normalized;
-
         if (desiredMoveDir.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(desiredMoveDir);
@@ -150,23 +145,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void ApplyAimRotation(Transform cam, float mouseX)
+    public void ApplyMouseBasedRotation(float mouseX)
     {
-        Vector3 cameraForward = cam.forward;
-        cameraForward.y = 0f;
-
-        //if (cameraForward.sqrMagnitude > 0.001f)
-        //{
-        //    Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        //}
         transform.Rotate(mouseX * Vector3.up * mouseSensitivity);
-    }
-
-    public void ApplyFPSRotation(float mouseX)
-    {
-        // Rotate character based on mouse horizontal axis
-        transform.Rotate(Vector3.up * mouseX * mouseSensitivity);
     }
 
     public void TryJump(PlayerStats stats)
@@ -223,9 +204,7 @@ public class PlayerMovement : MonoBehaviour
             // 1. Calculate how fast the animation wants to move
             float animSpeed = animationDelta.magnitude / Time.deltaTime;
 
-            // 2. Define a "Reference Speed" (Your forward run speed)
-            // Usually, a Mixamo run is around 4-5.5 units per second.
-            float referenceSpeed = 3.5f * speedMultiplier;
+            float referenceSpeed = animationSpeedMultiplier * speedMultiplier;
 
             // 3. If the user is pushing the stick, but the animation speed is too low
             if (moveDirection.magnitude > 0.1f && animSpeed < referenceSpeed)

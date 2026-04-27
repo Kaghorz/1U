@@ -17,12 +17,13 @@ public class PlayerAnimations : MonoBehaviour
     private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
     private static readonly int IsSprintingHash = Animator.StringToHash("isSprinting");
     private static readonly int AfkTimeHash = Animator.StringToHash("afkTime");
+    private static readonly int IsFightModeEnabledHash = Animator.StringToHash("isFightModeEnabled");
 
 
-    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isAiming)
+    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isCastingSpell, bool isFightModeEnabled)
     {
         // Handle AFK timer logic
-        if (!isMoving && isGrounded && !isSpellSelected)
+        if (!isMoving && isGrounded && !isSpellSelected && !isFightModeEnabled)
             afkTime += Time.deltaTime;
         else
             afkTime = 0f;
@@ -31,12 +32,12 @@ public class PlayerAnimations : MonoBehaviour
         float targetStrafe;
 
         // Determine the target weight for aiming animations
-        float targetWeight = isAiming ? 1f : 0f; // Full weight for aiming, no weight for normal movement
+        float targetWeight = isCastingSpell || isFightModeEnabled ? 1f : 0f; // Full weight for spell casting or fight mode, no weight for normal movement
         
 
-        if (isFPS || isAiming)
+        if (isFPS || isCastingSpell || isFightModeEnabled)
         {
-            // In First-Person or aiming mode, forward/backward and strafing are separate values
+            // In First-Person, aiming, or fight mode, forward/backward and strafing are separate values
             targetForward = input.y * speedMultiplier;
             targetStrafe = input.x * speedMultiplier;
         }
@@ -60,33 +61,33 @@ public class PlayerAnimations : MonoBehaviour
             animator.SetFloat(ForwardHash, targetForward, animationDampTime, Time.deltaTime);
             animator.SetFloat(StrafeHash, targetStrafe, animationDampTime, Time.deltaTime);
 
-            float currentWeight = animator.GetLayerWeight(1); // IMPORTANT: Assuming layer 1 is for aiming
-            animator.SetLayerWeight(1, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
+            // TODO: maybe delete
+            animator.SetBool(IsFightModeEnabledHash, isFightModeEnabled);
+
+            float currentWeight = 0f;
+            if (isCastingSpell)
+            {
+                currentWeight = animator.GetLayerWeight(1); // IMPORTANT: Assuming layer 1 is for aiming
+                animator.SetLayerWeight(1, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
+                animator.SetLayerWeight(3, 0); // Ensure fight mode layer is disabled when casting spells
+            }
+            else if (isFightModeEnabled)
+            {
+                currentWeight = animator.GetLayerWeight(3); // IMPORTANT: Assuming layer 3 is for fight mode
+                animator.SetLayerWeight(3, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
+                animator.SetLayerWeight(1, 0); // Ensure aiming layer is disabled when in fight mode
+            }
+            else
+            {
+                // When not casting or in fight mode, ensure both layers are disabled
+                animator.SetLayerWeight(1, 0);
+                animator.SetLayerWeight(3, 0);
+            }
         }
     }
 
-    /// <summary>
-    /// Returns the movement delta proposed by the current animation state.
-    /// This is used by the Hub to apply Root Motion to the Character Controller.
-    /// </summary>
     public Vector3 GetDeltaPosition()
     {
         return animator != null ? animator.deltaPosition : Vector3.zero;
-    }
-
-    /// <summary>
-    /// Triggers a specific animation state.
-    /// </summary>
-    public void SetTrigger(int triggerHash)
-    {
-        if (animator != null)
-        {
-            animator.SetTrigger(triggerHash);
-        }
-    }
-
-    public bool isCastingHollowPurple() 
-    {
-        return animator.GetCurrentAnimatorStateInfo(1).IsName("HollowPurple");
     }
 }
