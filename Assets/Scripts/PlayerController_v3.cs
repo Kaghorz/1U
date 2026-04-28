@@ -27,6 +27,9 @@ public class PlayerController_v3 : MonoBehaviour
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private InputActionReference enableFightModeAction;
 
+    [Header("UI Controls")]
+    [SerializeField] private GameObject crosshairUI;
+
     // References to specialized modules
     private PlayerMovement movement;
     private PlayerStats stats;
@@ -42,9 +45,6 @@ public class PlayerController_v3 : MonoBehaviour
     private float fightModeTimeout = 5f; // Time threshold to blend out from fight mode back to basic locomotion
     private bool isIdleInFightMode = false; // To track if the player has been idle in fight mode for too long
 
-
-    //Delete this after testing
-    private bool isTesting = true;
 
     private void Awake()
     {
@@ -91,6 +91,12 @@ public class PlayerController_v3 : MonoBehaviour
 
     private void Update()
     {
+        // Update crosshair visibility based on whether a spell is selected
+        if (crosshairUI != null)
+        {
+            crosshairUI.SetActive(combat.IsSpellSelected || isFightModeEnabled);
+        }
+
         // Gather raw input values
         Vector2 rawInput = moveAction.action.ReadValue<Vector2>();
 
@@ -259,14 +265,6 @@ public class PlayerController_v3 : MonoBehaviour
 
         // Update Animations
         animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled, isIdleInFightMode);
-
-        //Test
-        if (isTesting)
-        {
-            stats.TakeDamage(50f);
-            isTesting = false;
-        }
-        
     }
 
     private void OnAnimatorMove()
