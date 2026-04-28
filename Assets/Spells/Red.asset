@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a3f77ed96912a241ac29b398cb94a75, type: 3}
-  m_Name: Fireball
+  m_Name: Red
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
-  spellName: Fireball
-  manaCost: 40
-  cooldown: 3
-  castTime: 0
-  spellPrefab: {fileID: 4290624257267738132, guid: 15be2b21828dc6b439dc33d8478bfdd5, type: 3}
-  spellIcon: {fileID: 21300000, guid: 41d74ee737f679645b4dea51e1191458, type: 3}
+  spellName: Red
+  manaCost: 30
+  cooldown: 4
+  castTime: 1
+  spellPrefab: {fileID: 7903395648191957805, guid: 3e5a650cdf341a84f9208fa12cae8ce9, type: 3}
+  spellIcon: {fileID: 0}

@@ -5,14 +5,14 @@ using UnityEngine;
 public class HollowPurpleProjectile : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 25f;
-    [SerializeField] private float maxScale = 5f;
-    [SerializeField] private float growthRate = 2f;
+    [SerializeField] private float speed = 40f;
+    [SerializeField] private float maxScale = 30f;
+    [SerializeField] private float growthRate = 10f;
     [SerializeField] private float lifetime = 10f;
 
     [Header("Vacuum Effect")]
-    [SerializeField] private float pullRadius = 10f;
-    [SerializeField] private float pullForce = 20f;
+    [SerializeField] private float pullRadius = 20f;
+    [SerializeField] private float pullForce = 40f;
     [SerializeField] private LayerMask affectedLayers; // Affect players, enemies, and destructibles
 
     private Vector3 direction;

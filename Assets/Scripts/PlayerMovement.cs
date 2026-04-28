@@ -89,9 +89,6 @@ public class PlayerMovement : MonoBehaviour
         // Ignore ground checks briefly during the upward phase of a jump
         if (verticalVelocity > 0.1f || jumpBufferTimer > 0f)
         {
-            //Debug
-            Debug.Log("In jump buffer or ascending: verticalVelocity=" + verticalVelocity + ", jumpBufferTimer=" + jumpBufferTimer);
-
             jumpBufferTimer -= Time.deltaTime;
             IsGrounded = false;
             animator.SetBool(IsGroundedHash, IsGrounded);
@@ -112,8 +109,6 @@ public class PlayerMovement : MonoBehaviour
         bool backHit = Physics.Raycast(back, Vector3.down, groundCheckDistance, groundLayer);
 
         IsGrounded = centerHit || leftHit || rightHit || forwardHit || backHit;
-        //Debug
-        Debug.Log("Grounded: centerHit=" + centerHit + ", leftHit=" + leftHit + ", rightHit=" + rightHit + ", forwardHit=" + forwardHit + ", backHit=" + backHit);
 
         if (IsGrounded)
         {
@@ -263,9 +258,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-
-        //Vector3 jumpColliderOffset = Vector3.zero;
-        //jumpColliderOffset.y = hasJumped ? controller.height / 2f : 0f;
 
         Vector3 origin = transform.position + Vector3.up * 0.2f;
         Vector3 left = origin - transform.right * groundCheckOffset;

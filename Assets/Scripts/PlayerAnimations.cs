@@ -17,10 +17,9 @@ public class PlayerAnimations : MonoBehaviour
     private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
     private static readonly int IsSprintingHash = Animator.StringToHash("isSprinting");
     private static readonly int AfkTimeHash = Animator.StringToHash("afkTime");
-    private static readonly int IsFightModeEnabledHash = Animator.StringToHash("isFightModeEnabled");
+    private static readonly int IsIdleInFightModeHash = Animator.StringToHash("isIdleInFightMode");
 
-
-    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isCastingSpell, bool isFightModeEnabled)
+    public void UpdateMovementParameters(Vector2 input, float speedMultiplier, bool isMoving, bool isGrounded, bool isSprinting, bool isFPS, bool isSpellSelected, bool isCastingSpell, bool isFightModeEnabled, bool isIdleInFightMode)
     {
         // Handle AFK timer logic
         if (!isMoving && isGrounded && !isSpellSelected && !isFightModeEnabled)
@@ -31,8 +30,7 @@ public class PlayerAnimations : MonoBehaviour
         float targetForward;
         float targetStrafe;
 
-        // Determine the target weight for aiming animations
-        float targetWeight = isCastingSpell || isFightModeEnabled ? 1f : 0f; // Full weight for spell casting or fight mode, no weight for normal movement
+        float targetWeight = isFightModeEnabled ? 1f : 0f; // Full weight for fight mode, no weight for normal movement
         
 
         if (isFPS || isCastingSpell || isFightModeEnabled)
@@ -61,27 +59,17 @@ public class PlayerAnimations : MonoBehaviour
             animator.SetFloat(ForwardHash, targetForward, animationDampTime, Time.deltaTime);
             animator.SetFloat(StrafeHash, targetStrafe, animationDampTime, Time.deltaTime);
 
-            // TODO: maybe delete
-            animator.SetBool(IsFightModeEnabledHash, isFightModeEnabled);
+            animator.SetBool(IsIdleInFightModeHash, isIdleInFightMode);
 
-            float currentWeight = 0f;
-            if (isCastingSpell)
+            float fightModeLayerWeight = animator.GetLayerWeight(2); // IMPORTANT: Assuming layer 2 is for fight mode
+            if (isFightModeEnabled && !isIdleInFightMode)
             {
-                currentWeight = animator.GetLayerWeight(1); // IMPORTANT: Assuming layer 1 is for aiming
-                animator.SetLayerWeight(1, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
-                animator.SetLayerWeight(3, 0); // Ensure fight mode layer is disabled when casting spells
-            }
-            else if (isFightModeEnabled)
-            {
-                currentWeight = animator.GetLayerWeight(3); // IMPORTANT: Assuming layer 3 is for fight mode
-                animator.SetLayerWeight(3, Mathf.Lerp(currentWeight, targetWeight, Time.deltaTime * 10f));
-                animator.SetLayerWeight(1, 0); // Ensure aiming layer is disabled when in fight mode
+                animator.SetLayerWeight(2, Mathf.Lerp(fightModeLayerWeight, targetWeight, Time.deltaTime * 10f));
             }
             else
             {
-                // When not casting or in fight mode, ensure both layers are disabled
-                animator.SetLayerWeight(1, 0);
-                animator.SetLayerWeight(3, 0);
+                // When not in fight mode, ensure the fight mode layer is disabled
+                animator.SetLayerWeight(2, Mathf.Lerp(fightModeLayerWeight, 0f, Time.deltaTime * 10f));
             }
         }
     }

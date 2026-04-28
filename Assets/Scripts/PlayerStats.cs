@@ -33,10 +33,6 @@ public class PlayerStats : MonoBehaviour
             staminaBarParent.SetActive(false);
     }
 
-    /// <summary>
-    /// Processes the regeneration and depletion of resources over time.
-    /// Called every frame by the Central Hub.
-    /// </summary>
     public void TickResources(bool isSprinting, bool isGrounded)
     {
         HandleStaminaLogic(isSprinting, isGrounded);
@@ -90,9 +86,6 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Checks if a stamina-based action (like jumping) can be performed.
-    /// </summary>
     public bool ConsumeStamina(float amount)
     {
         if (currentStamina >= amount)
@@ -105,9 +98,6 @@ public class PlayerStats : MonoBehaviour
 
     public bool CanConsumeStamina(float amount) => currentStamina >= amount;
 
-    /// <summary>
-    /// Checks if a mana-based action (like spellcasting) can be performed.
-    /// </summary>
     public bool ConsumeMana(float amount)
     {
         if (currentMana >= amount)
@@ -120,8 +110,5 @@ public class PlayerStats : MonoBehaviour
 
     public bool CanConsumeMana(float amount) => currentMana >= amount;
 
-    /// <summary>
-    /// Provides a simple check to see if the player has any stamina remaining.
-    /// </summary>
     public bool HasStamina() => currentStamina > 0;
 }

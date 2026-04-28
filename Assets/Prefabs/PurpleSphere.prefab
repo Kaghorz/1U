@@ -186,12 +186,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29aaf883e54256a46a3962ad598fa9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HollowPurpleProjectile
-  speed: 25
+  speed: 40
   maxScale: 30
   growthRate: 10
   lifetime: 10
-  pullRadius: 10
-  pullForce: 20
+  pullRadius: 20
+  pullForce: 40
   affectedLayers:
     serializedVersion: 2
     m_Bits: 256

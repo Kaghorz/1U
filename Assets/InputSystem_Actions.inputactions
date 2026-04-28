@@ -115,7 +115,25 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UltimativeAbilityCast",
+                    "name": "SelectSpell2",
+                    "type": "Button",
+                    "id": "e5e2e60a-e7af-496d-a5e3-d2b1346cf898",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectSpell3",
+                    "type": "Button",
+                    "id": "45e11f5a-37c8-44e8-96dd-f37daf7c2a66",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectUltimativeSpell",
                     "type": "Button",
                     "id": "a8112018-4b35-472e-a27f-c63782e156b9",
                     "expectedControlType": "",
@@ -559,7 +577,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "UltimativeAbilityCast",
+                    "action": "SelectUltimativeSpell",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -571,6 +589,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Enable Fight Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3fd0e927-3280-4862-8ed7-717282d5fca4",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "SelectSpell2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d84f574f-dd7c-48f8-a063-07a39552e96b",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "SelectSpell3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

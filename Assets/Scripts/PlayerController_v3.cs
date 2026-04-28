@@ -21,8 +21,10 @@ public class PlayerController_v3 : MonoBehaviour
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference selectSpell1Action;
+    [SerializeField] private InputActionReference selectSpell2Action;
+    [SerializeField] private InputActionReference selectSpell3Action;
+    [SerializeField] private InputActionReference selectUltimativeSpellAction; // FUTURE: Placeholder for an ultimate spell input
     [SerializeField] private InputActionReference attackAction;
-    [SerializeField] private InputActionReference hollowPurpleAction;
     [SerializeField] private InputActionReference enableFightModeAction;
 
     // References to specialized modules
@@ -36,6 +38,10 @@ public class PlayerController_v3 : MonoBehaviour
     float speedMultiplier;
     private bool isFightModeEnabled = false;
     private bool isCastingSpell = false;
+    private float lastActionTime = 0f; // To track time since last action to return to basic locomotion
+    private float fightModeTimeout = 5f; // Time threshold to blend out from fight mode back to basic locomotion
+    private bool isIdleInFightMode = false; // To track if the player has been idle in fight mode for too long
+
 
     private void Awake()
     {
@@ -63,7 +69,7 @@ public class PlayerController_v3 : MonoBehaviour
         enableFightModeAction.action.Enable();
         selectSpell1Action.action.Enable();
         attackAction.action.Enable();
-        hollowPurpleAction.action.Enable();
+        selectSpell3Action.action.Enable();
     }
 
     private void OnDisable()
@@ -77,13 +83,19 @@ public class PlayerController_v3 : MonoBehaviour
         enableFightModeAction.action.Disable();
         selectSpell1Action.action.Disable();
         attackAction.action.Disable();
-        hollowPurpleAction.action.Disable();
+        selectSpell3Action.action.Disable();
     }
 
     private void Update()
     {
         // Gather raw input values
         Vector2 rawInput = moveAction.action.ReadValue<Vector2>();
+
+        if (combat.IsAttacking)
+        {
+            // Lock movement directional input while dealing a melee combo
+            rawInput = Vector2.zero;
+        }
 
         Vector3 camForward = mainCamera.forward;
         Vector3 camRight = mainCamera.right;
@@ -97,8 +109,11 @@ public class PlayerController_v3 : MonoBehaviour
         bool isTPS = tpsCamera.IsLive;
         bool isShiftPressed = sprintAction.action.IsPressed();
 
+
+            
+
         // Handle walking toggle logic
-        if (walkAction.action.WasPressedThisFrame())
+        if (walkAction.action.WasPressedThisFrame() && !isCastingSpell && !isFightModeEnabled)
         {
             isCtrlPressed = !isCtrlPressed;
         }
@@ -123,7 +138,7 @@ public class PlayerController_v3 : MonoBehaviour
             speedMultiplier = 0.5f;
         }
 
-        aimCamera.Priority = (isCastingSpell || isFightModeEnabled) && !isFPS ? 20 : 5;
+        aimCamera.Priority = (isCastingSpell || (isFightModeEnabled && !isIdleInFightMode)) && !isFPS ? 20 : 5;
 
         // Update physical movement and rotation
         movement.ProcessGravity();
@@ -137,7 +152,7 @@ public class PlayerController_v3 : MonoBehaviour
             float mouseX = lookAction.action.ReadValue<Vector2>().x;
             movement.ApplyMouseBasedRotation(mouseX);
         }
-        else if (isTPS)
+        else if (isTPS || isIdleInFightMode)
         {
             CancelTPSOrbitalCameraRecentering();
             movement.ApplyTPSRotation(rawInput, curMoveDir);
@@ -160,53 +175,87 @@ public class PlayerController_v3 : MonoBehaviour
         // Handle Combat and Spellcasting
         if (selectSpell1Action.action.WasPressedThisFrame())
         {
-            isCastingSpell = true;
-            isFightModeEnabled = false;
-            Debug.Log("Exiting Fight Mode to cast a spell. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
-
             if (combat.selectedSpell == combat.GetSlot1Spell())
             {
                 combat.DeselectSpell();
                 isCastingSpell = false;
             }
-            else
+            else if (combat.SelectSpellSlot1(stats))
             {
-                combat.SelectSpellSlot1();
+                isCastingSpell = true;
+                isFightModeEnabled = false;
+                Debug.Log("Exiting Fight Mode to cast spell in slot 1. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
             }
-        }
-        else if (hollowPurpleAction.action.WasPressedThisFrame())
-        {
-            isCastingSpell = true;
-            isFightModeEnabled = false;
-            Debug.Log("Exiting Fight Mode to cast Hollow Purple. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
 
+            lastActionTime = Time.time;
+        }
+        else if (selectSpell2Action.action.WasPressedThisFrame())
+        {
             if (combat.selectedSpell == combat.GetSlot2Spell())
             {
                 combat.DeselectSpell();
-                isCastingSpell= false;
+                isCastingSpell = false;
             }
-            else
+            else if (combat.SelectSpellSlot2(stats))
             {
-                combat.SelectSpellHollowPurple();
+                isCastingSpell = true;
+                isFightModeEnabled = false;
+                Debug.Log("Exiting Fight Mode to cast spell in slot 2. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
             }
+
+            lastActionTime = Time.time;
+        }
+        else if (selectSpell3Action.action.WasPressedThisFrame())
+        {
+            if (combat.selectedSpell == combat.GetSlot3Spell())
+            {
+                combat.DeselectSpell();
+                isCastingSpell = false;
+            }
+            else if (combat.SelectSpellSlot3(stats))
+            {
+                isCastingSpell = true;
+                isFightModeEnabled = false;
+                Debug.Log("Exiting Fight Mode to cast spell in slot 3. Fight Mode: " + isFightModeEnabled + " | Casting Spell: " + isCastingSpell);
+            }
+
+            lastActionTime = Time.time;
         }
         else if (enableFightModeAction.action.WasPressedThisFrame())
         {
             isCastingSpell = false;
             isFightModeEnabled = !isFightModeEnabled;
             Debug.Log("Fight Mode " + (isFightModeEnabled ? "Enabled" : "Disabled") + " | Casting Spell: " + isCastingSpell);
+
+            lastActionTime = Time.time;
         }
-        
 
-
-
-        if ((isCastingSpell || isFightModeEnabled) && attackAction.action.WasPressedThisFrame())
+        if (isCastingSpell && attackAction.action.WasPressedThisFrame())
         {
             combat.TryPerformAttack(stats, mainCamera);
+            isCastingSpell = false; // Exit casting state after performing the attack
+
+            lastActionTime = Time.time;
+        }
+        else if (isFightModeEnabled && attackAction.action.WasPressedThisFrame())
+        {
+            combat.TryPerformAttack(stats, mainCamera);
+
+            lastActionTime = Time.time;
         }
 
-        // 8. Update Animations
-        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled);
+        if (isFightModeEnabled && (Time.time - lastActionTime) > fightModeTimeout)
+        {
+            isIdleInFightMode = true;
+            isFightModeEnabled= false;
+        }
+        else
+        {
+            isIdleInFightMode = false;
+        }
+
+        // Update Animations
+        animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled, isIdleInFightMode);
     }
 
     private void OnAnimatorMove()
