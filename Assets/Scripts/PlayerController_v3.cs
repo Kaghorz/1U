@@ -43,6 +43,9 @@ public class PlayerController_v3 : MonoBehaviour
     private bool isIdleInFightMode = false; // To track if the player has been idle in fight mode for too long
 
 
+    //Delete this after testing
+    private bool isTesting = true;
+
     private void Awake()
     {
         // Initialize references to neighboring components on the same object
@@ -256,6 +259,14 @@ public class PlayerController_v3 : MonoBehaviour
 
         // Update Animations
         animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled, isIdleInFightMode);
+
+        //Test
+        if (isTesting)
+        {
+            stats.TakeDamage(50f);
+            isTesting = false;
+        }
+        
     }
 
     private void OnAnimatorMove()

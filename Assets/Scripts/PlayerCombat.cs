@@ -90,10 +90,9 @@ public class PlayerCombat : MonoBehaviour
 
     private void Start()
     {
-        //TODO: Set all cooldown images to full (no cooldown) at the start
-        //spell1CooldownImage.fillAmount = 1;
-        //spell2CooldownImage.fillAmount = 1;
-        //spell3CooldownImage.fillAmount = 1;
+        spell1CooldownImage.fillAmount = 1;
+        spell2CooldownImage.fillAmount = 1;
+        spell3CooldownImage.fillAmount = 1;
     }
 
     private void Update()
@@ -401,13 +400,30 @@ public class PlayerCombat : MonoBehaviour
 
     private void HandleCooldownUI()
     {
-        if (selectedSpell == null || spell1CooldownImage == null) return;
+        // Update Slot 1 (Blue)
+        if (spell1CooldownImage != null && slot1Spell != null)
+        {
+            float timeSinceCast1 = Time.time - spell1LastCastTime;
+            // Fill goes from 0 (empty, on cooldown) to 1 (full, ready to use)
+            float progress1 = Mathf.Clamp01(timeSinceCast1 / slot1Spell.cooldown);
+            spell1CooldownImage.fillAmount = progress1;
+        }
 
-        float timeSinceCast = Time.time - lastCastTime;
+        // Update Slot 2 (Red)
+        if (spell2CooldownImage != null && slot2Spell != null)
+        {
+            float timeSinceCast2 = Time.time - spell2LastCastTime;
+            float progress2 = Mathf.Clamp01(timeSinceCast2 / slot2Spell.cooldown);
+            spell2CooldownImage.fillAmount = progress2;
+        }
 
-        // Calculate radial fill: 1 is fully on cooldown, 0 is ready to use
-        float cooldownProgress = Mathf.Clamp01(1 - (timeSinceCast / selectedSpell.cooldown));
-        spell1CooldownImage.fillAmount = cooldownProgress;
+        // Update Slot 3 (Hollow Purple)
+        if (spell3CooldownImage != null && slot3Spell != null)
+        {
+            float timeSinceCast3 = Time.time - spell3LastCastTime;
+            float progress3 = Mathf.Clamp01(timeSinceCast3 / slot3Spell.cooldown);
+            spell3CooldownImage.fillAmount = progress3;
+        }
     }
 
     public SpellData GetSlot1Spell()

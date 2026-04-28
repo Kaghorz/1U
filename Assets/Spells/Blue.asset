@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
   spellName: Blue
   manaCost: 20
-  cooldown: 3
+  cooldown: 5
   castTime: 1
   spellPrefab: {fileID: 4081585170338975217, guid: 2f781aa608d777a40babaa9cfab1af3a, type: 3}
   spellIcon: {fileID: 0}
