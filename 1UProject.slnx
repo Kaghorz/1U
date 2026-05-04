@@ -1,4 +1,6 @@
 ﻿<Solution>
+  <Project Path="Unity.TerrainTools.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Unity.TerrainTools.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>
