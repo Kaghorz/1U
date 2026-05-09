@@ -19,6 +19,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float staminaDepleteRate = 15f;
     [SerializeField] private float staminaRegenRate = 15f;
+    [SerializeField] private float staminaRegenDelay = 1.5f; // Seconds before stamina starts regenerating
 
     [Header("Mana Settings")]
     [SerializeField] private float maxMana = 100f;
@@ -31,6 +32,7 @@ public class PlayerStats : MonoBehaviour
     private float currentStamina;
     private float currentMana;
     private float timeSinceLastDamage;
+    private float timeSinceLastStaminaConsume;
 
     private void Start()
     {
@@ -47,10 +49,10 @@ public class PlayerStats : MonoBehaviour
         Debug.Log($"PlayerStats initialized. Health: {currentHealth}/{maxHealth}, Stamina: {currentStamina}/{maxStamina}, Mana: {currentMana}/{maxMana}");
     }
 
-    public void TickResources(bool isSprinting, bool isGrounded)
+    public void TickResources(bool isSprinting, bool isGrounded, bool isShiftPressed)
     {
         HandleHealthLogic();
-        HandleStaminaLogic(isSprinting, isGrounded);
+        HandleStaminaLogic(isSprinting, isGrounded, isShiftPressed);
         HandleManaLogic();
         UpdateUI();
     }
@@ -66,17 +68,23 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    private void HandleStaminaLogic(bool isSprinting, bool isGrounded)
+    private void HandleStaminaLogic(bool isSprinting, bool isGrounded, bool isShiftPressed)
     {
         if (isSprinting)
         {
             // Deplete stamina while the player is sprinting
             currentStamina -= staminaDepleteRate * Time.deltaTime;
+            timeSinceLastStaminaConsume = 0f; // Reset regeneration delay
         }
-        else if (isGrounded)
+        else
         {
-            // Regenerate stamina only when touching the ground and not sprinting
-            currentStamina += staminaRegenRate * Time.deltaTime;
+            timeSinceLastStaminaConsume += Time.deltaTime;
+
+            if (!isShiftPressed && isGrounded && timeSinceLastStaminaConsume >= staminaRegenDelay)
+            {
+                // Regenerate stamina only when touching the ground, not sprinting, and after the delay
+                currentStamina += staminaRegenRate * Time.deltaTime;
+            }
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -122,6 +130,7 @@ public class PlayerStats : MonoBehaviour
         if (currentStamina >= amount)
         {
             currentStamina -= amount;
+            timeSinceLastStaminaConsume = 0f; // Reset regeneration delay
             return true;
         }
         return false;

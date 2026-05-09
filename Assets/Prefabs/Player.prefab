@@ -724,7 +724,7 @@ GameObject:
   - component: {fileID: 1932106086176579506}
   - component: {fileID: 714684917617630423}
   - component: {fileID: 8892147686157189284}
-  - component: {fileID: 7682375486879196525}
+  - component: {fileID: 4959964401140541623}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -886,6 +886,7 @@ MonoBehaviour:
   maxStamina: 100
   staminaDepleteRate: 15
   staminaRegenRate: 15
+  staminaRegenDelay: 1.5
   maxMana: 100
   manaRegenRate: 5
   manaFillImage: {fileID: 0}
@@ -969,6 +970,7 @@ MonoBehaviour:
   selectUltimativeSpellAction: {fileID: 1754019148470438426, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   enableFightModeAction: {fileID: -2085871729558674551, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  crosshairUI: {fileID: 0}
 --- !u!114 &8892147686157189284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,7 +1024,7 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
---- !u!114 &7682375486879196525
+--- !u!114 &4959964401140541623
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1031,9 +1033,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1981210371300072100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49b1c2c48708da64c82160d4b2653ae3, type: 3}
+  m_Script: {fileID: 11500000, guid: c8a7bdbd451e85a408bfbaa1b1dbe2eb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PersistentObject
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPersistence
+  gamePlayUI: {fileID: 0}
 --- !u!1 &2825426446658136320
 GameObject:
   m_ObjectHideFlags: 0

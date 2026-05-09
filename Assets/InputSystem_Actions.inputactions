@@ -73,7 +73,7 @@
                     "name": "Next",
                     "type": "Button",
                     "id": "b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -145,6 +145,15 @@
                     "name": "Enable Fight Mode",
                     "type": "Button",
                     "id": "cae2169d-ba1d-432d-a678-3d99cae976ad",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "fd1ad75f-e404-4b26-8c2a-8e3d6a6aff4f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -611,6 +620,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "SelectSpell3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5aec15c-1e16-4180-bee6-fb52c219537f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

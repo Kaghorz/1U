@@ -36,9 +36,10 @@ public class PlayerController_v3 : MonoBehaviour
     private PlayerCombat combat;
     private PlayerAnimations animations;
 
+    private float speedMultiplier = 1f; // Default is running
+    private bool isSprinting = false;
     private bool isCtrlPressed = false; // Toggle state for slow walking
     private Vector3 curMoveDir;
-    float speedMultiplier;
     private bool isFightModeEnabled = false;
     private bool isCastingSpell = false;
     private float lastActionTime = 0f; // To track time since last action to return to basic locomotion
@@ -118,33 +119,29 @@ public class PlayerController_v3 : MonoBehaviour
         bool isTPS = tpsCamera.IsLive;
         bool isShiftPressed = sprintAction.action.IsPressed();
 
-
-            
-
         // Handle walking toggle logic
         if (walkAction.action.WasPressedThisFrame() && !isCastingSpell && !isFightModeEnabled)
         {
             isCtrlPressed = !isCtrlPressed;
         }
 
-  
-
         // Determine movement state and speed multipliers
-        speedMultiplier = 1f; // Default is running
-        bool isSprinting = false;
-
-        if (isCastingSpell || isFightModeEnabled)
-        {
-            speedMultiplier = .5f;
-        }
-        else if (isShiftPressed && isMoving && stats.HasStamina() && movement.IsGrounded)
-        {
-            speedMultiplier = 2f;
-            isSprinting = true;
-        }
-        else if (isCtrlPressed && isMoving)
+        if (isCastingSpell || isFightModeEnabled || (isCtrlPressed && isMoving))
         {
             speedMultiplier = 0.5f;
+        }
+        else 
+        {
+            if (isShiftPressed && isMoving && stats.HasStamina() && movement.IsGrounded)
+            {
+                speedMultiplier = 2f;
+                isSprinting = true;
+            }
+            else
+            {
+                speedMultiplier = 1f;
+                isSprinting = false;
+            }
         }
 
         aimCamera.Priority = (isCastingSpell || (isFightModeEnabled && !isIdleInFightMode)) && !isFPS ? 20 : 5;
@@ -154,7 +151,6 @@ public class PlayerController_v3 : MonoBehaviour
         movement.CheckGroundStatus();
         movement.SmoothlyResizeCollider();
 
-        
         if (isFPS || isCastingSpell || isFightModeEnabled)
         {
             RecenterTPSOrbitalCamera();
@@ -177,7 +173,7 @@ public class PlayerController_v3 : MonoBehaviour
         movement.HandleAirMovement(moveAction, mainCamera);
 
         // Update Resources (Stamina and Mana)
-        stats.TickResources(isSprinting, movement.IsGrounded);
+        stats.TickResources(isSprinting, movement.IsGrounded, isShiftPressed);
 
 
 
@@ -262,6 +258,9 @@ public class PlayerController_v3 : MonoBehaviour
         {
             isIdleInFightMode = false;
         }
+
+        // Debug
+        Debug.Log("Current speed multiplier: " + speedMultiplier);
 
         // Update Animations
         animations.UpdateMovementParameters(rawInput, speedMultiplier, isMoving, movement.IsGrounded, isSprinting, isFPS, combat.IsSpellSelected, isCastingSpell, isFightModeEnabled, isIdleInFightMode);
