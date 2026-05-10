@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] private string levelSceneName = "JujutsuHigh";
     [Header("Panels")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject characterSelectPanel;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -14,6 +14,8 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
     }
@@ -22,17 +24,10 @@ public class MainMenuManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
 
-        // TODO: Replace "SampleScene" with the actual name of level scene
-        SceneManager.LoadScene("SampleScene");
-        Debug.Log("Sample Scene Loaded");
+        SceneManager.LoadScene(levelSceneName);
+        Debug.Log(levelSceneName + " Loaded");
 
         
-    }
-
-    public void OpenCharacterSelect()
-    {
-        mainMenuPanel.SetActive(false);
-        characterSelectPanel.SetActive(true);
     }
 
     public void OpenSettings()
@@ -45,7 +40,6 @@ public class MainMenuManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
-        characterSelectPanel.SetActive(false);
     }
 
     public void ExitGame()
