@@ -386,8 +386,15 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider enemy in hitEnemies)
         {
-            Debug.Log("Hit " + enemy.name + ", combo index: " + comboIndex);
-            // TODO: enemy.GetComponent<EnemyHealth>().TakeDamage(meleeDamage);
+            if (enemy.TryGetComponent(out EnemyBase enemyBase))
+            {
+                enemyBase.TakeDamage(meleeDamage);
+                Debug.Log("Dealt " + meleeDamage + " damage to " + enemyBase.name + " (combo index: " + comboIndex + ")");
+            }
+            else
+            {
+                Debug.Log("Hit " + enemy.name + " but no EnemyBase found. Combo index: " + comboIndex);
+            }
 
             // Add a bit of force to make it feel "Gojo" strong
             if (enemy.TryGetComponent(out Rigidbody rb))

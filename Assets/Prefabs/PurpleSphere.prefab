@@ -190,11 +190,12 @@ MonoBehaviour:
   maxScale: 30
   growthRate: 10
   lifetime: 10
-  pullRadius: 20
-  pullForce: 40
+  pullRadius: 5
+  pullForce: 10
   affectedLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1792
+  damage: 100
   impulseSource: {fileID: 0}
 --- !u!114 &2699937533204840394
 MonoBehaviour:

@@ -60,7 +60,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &6353266169572549174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,11 +78,12 @@ MonoBehaviour:
   lifetime: 10
   growthDuration: 1
   targetScale: 10
-  pullRadius: 10
-  pullForce: 25
+  pullRadius: 5
+  pullForce: 7
   affectedLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1792
+  damage: 25
 --- !u!1 &4187209633566824269
 GameObject:
   m_ObjectHideFlags: 0

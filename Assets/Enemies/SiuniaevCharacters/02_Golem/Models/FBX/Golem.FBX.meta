@@ -159,7 +159,7 @@ ModelImporter:
     second: die
   - first:
       74: 7400016
-    second: walk
+    second: Walk
   - first:
       74: 7400018
     second: hit2
@@ -444,7 +444,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: walk
+      name: Walk
       takeName: walk
       internalID: 0
       firstFrame: 340
@@ -456,13 +456,13 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
@@ -620,7 +620,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 2
+    globalScale: 2.2
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -670,7 +670,107 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: Golem(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: 1
+      parentName: Golem(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: Bn_Root
+      parentName: Golem(Clone)
+      position: {x: -0.000000008556203, y: 0.5636929, z: 0.060655504}
+      rotation: {x: 0.5246689, y: -0.4740489, z: 0.524669, w: -0.47404918}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: Bone007
+      parentName: Bn_Root
+      position: {x: -0.18633108, y: 0.042030923, z: -0.24428664}
+      rotation: {x: 0.1386183, y: -0.6933864, z: 0.70384914, w: 0.06779953}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone008
+      parentName: Bone007
+      position: {x: -0.3849819, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0.188031, w: 0.98216313}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be_0
+      parentName: Bone008
+      position: {x: -0.37220356, y: 0.000000111759995, z: 0}
+      rotation: {x: -0.00000005904402, y: 0.000000044491994, z: -0.06390057, w: 0.9979563}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bn_1
+      parentName: Bn_Root
+      position: {x: -0.8023117, y: 0.000000055879998, z: 0}
+      rotation: {x: 0, y: 0, z: 0.30166674, w: 0.9534134}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone004(mirrored)(mirrored)
+      parentName: Bn_1
+      position: {x: -0.51018554, y: 0.22819844, z: -0.40006307}
+      rotation: {x: -0.30115336, y: 0.6480427, z: -0.4676902, w: -0.520205}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone005(mirrored)(mirrored)
+      parentName: Bone004(mirrored)(mirrored)
+      position: {x: -1.0486312, y: -0.00000027939998, z: -0.0000008382}
+      rotation: {x: -0.23598027, y: 0.052395813, z: -0.12979473, w: 0.96162426}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be(mirrored)
+      parentName: Bone005(mirrored)(mirrored)
+      position: {x: -0.6212329, y: 0.00000067056, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bn_2
+      parentName: Bn_1
+      position: {x: -0.58024615, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0.6460037, w: 0.7633342}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be_3
+      parentName: Bn_2
+      position: {x: -0.6811496, y: 0.00000022351999, z: 0.000000111759995}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone001
+      parentName: Bn_2
+      position: {x: -0.19532982, y: -0.26625407, z: -0.000000111759995}
+      rotation: {x: 0, y: 0, z: 0.065606855, w: 0.9978456}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be
+      parentName: Bone001
+      position: {x: -0.5694627, y: 0.00000022351999, z: -0.000000055879998}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone004(mirrored)(mirrored)(mirrored)
+      parentName: Bn_1
+      position: {x: -0.51018584, y: 0.22819854, z: 0.40004474}
+      rotation: {x: -0.520205, y: -0.46769014, z: 0.6480428, w: -0.30115324}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone005(mirrored)(mirrored)(mirrored)
+      parentName: Bone004(mirrored)(mirrored)(mirrored)
+      position: {x: -1.0486314, y: 0.00000027939998, z: -0.00000072643996}
+      rotation: {x: 0.23598044, y: 0.052395396, z: 0.12979507, w: 0.96162426}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be(mirrored)(mirrored)
+      parentName: Bone005(mirrored)(mirrored)(mirrored)
+      position: {x: -0.6212323, y: 0, z: 0.00000016764}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone007(mirrored)
+      parentName: Bn_Root
+      position: {x: -0.18633097, y: 0.042031035, z: 0.2443073}
+      rotation: {x: 0.06779934, y: 0.7038488, z: -0.69338673, w: 0.13861838}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone008(mirrored)
+      parentName: Bone007(mirrored)
+      position: {x: -0.38498184, y: 0, z: 0}
+      rotation: {x: -0.0000009821632, y: 0.00000018803101, z: -0.188031, w: 0.98216313}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Be_1
+      parentName: Bone008(mirrored)
+      position: {x: -0.3722037, y: -0.00000016764, z: 0}
+      rotation: {x: 0.0000006196415, y: -0.00000023494434, z: 0.06390101, w: 0.9979563}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -678,7 +778,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.0508
+    globalScale: 2.2
     rootMotionBoneName: 1
     hasTranslationDoF: 0
     hasExtraRoot: 1

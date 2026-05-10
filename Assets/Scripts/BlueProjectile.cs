@@ -17,6 +17,9 @@ public class BlueProjectile : MonoBehaviour
     [SerializeField] private float pullForce = 25f;
     [SerializeField] private LayerMask affectedLayers;
 
+    [Header("Combat Settings")]
+    [SerializeField] private float damage = 25f;
+
     private Vector3 startPosition;
     private Vector3 direction;
     private Vector3 initialScale;
@@ -99,6 +102,15 @@ public class BlueProjectile : MonoBehaviour
                 Vector3 forceDirection = (transform.position - obj.transform.position).normalized;
                 rb.AddForce(forceDirection * pullForce, ForceMode.Acceleration);
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out EnemyBase enemyBase))
+        {
+            enemyBase.TakeDamage(damage);
+            Debug.Log("Blue hit " + enemyBase.name + " for " + damage + " damage.");
         }
     }
 }

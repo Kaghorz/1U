@@ -15,6 +15,9 @@ public class HollowPurpleProjectile : MonoBehaviour
     [SerializeField] private float pullForce = 40f;
     [SerializeField] private LayerMask affectedLayers; // Affect players, enemies, and destructibles
 
+    [Header("Combat Settings")]
+    [SerializeField] private float damage = 80f;
+
     private Vector3 direction;
     private bool isLaunched = false;
     public CinemachineImpulseSource impulseSource;
@@ -63,6 +66,12 @@ public class HollowPurpleProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider healthcare)
     {
+        if (healthcare.TryGetComponent(out EnemyBase enemyBase))
+        {
+            enemyBase.TakeDamage(damage);
+            Debug.Log("Hollow Purple hit " + enemyBase.name + " for " + damage + " damage.");
+        }
+
         Destroy(gameObject);
     }
 }

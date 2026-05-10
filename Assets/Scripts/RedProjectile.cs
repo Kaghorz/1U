@@ -67,6 +67,12 @@ public class RedProjectile : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, affectedLayers);
         foreach (Collider hit in colliders)
         {
+            if (hit.TryGetComponent(out EnemyBase enemyBase))
+            {
+                enemyBase.TakeDamage(damage);
+                Debug.Log("Red hit " + enemyBase.name + " for " + damage + " damage.");
+            }
+
             // Apply Repulsion to anything with a Rigidbody
             if (hit.TryGetComponent(out Rigidbody rb))
             {

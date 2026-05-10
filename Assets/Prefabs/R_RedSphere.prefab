@@ -165,7 +165,7 @@ MonoBehaviour:
   repulsionForce: 25
   affectedLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1792
   impactEffectPrefab: {fileID: 0}
   impulseSource: {fileID: 0}
 --- !u!54 &6268645464391693926
