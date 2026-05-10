@@ -30,6 +30,13 @@ public class EnemyBase : MonoBehaviour
         if (player != null) playerTransform = player.transform;
     }
 
+    protected virtual void Start()
+    {
+        // Register with the manager
+        if (MissionManager.Instance != null)
+            MissionManager.Instance.RegisterEnemy(this);
+    }
+
     protected virtual void Update()
     {
         if (currentState == EnemyState.Death) return;
@@ -144,6 +151,18 @@ public class EnemyBase : MonoBehaviour
         // Set your animator bool for the Death transition
         anim.SetBool("hasDied", true);
 
+        // If this specific enemy is a Boss, notify the manager
+        if (tag == "Boss" && MissionManager.Instance != null)
+        {
+            MissionManager.Instance.OnBossDefeated();
+        }
+
+        // Unregister from the mission manager
+        if (MissionManager.Instance != null)
+        {
+            MissionManager.Instance.UnregisterEnemy(this);
+        }
+
         // Optional: Destroy after animation completes or let it stay as a corpse
         Destroy(gameObject, 2f);
     }
@@ -183,6 +202,29 @@ public class EnemyBase : MonoBehaviour
 
             // Smoothly update the "Speed" float parameter
             anim.SetFloat("Speed", targetSpeed);
+        }
+    }
+
+    // Called from the animation event at the moment of impact in the attack animation
+    public void PerformAttackDamage()
+    {
+        if (playerTransform != null)
+        {
+            // Calculate the current distance to ensure the player didn't dodge away
+            float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+            // A small buffer to the range to make it feel fair for the player
+            if (distance <= enemyData.attackRange + 0.5f)
+            {
+                PlayerStats playerStats = playerTransform.GetComponent<PlayerStats>();
+                if (playerStats != null)
+                {
+                    // Call the TakeDamage method on the player
+                    playerStats.TakeDamage(enemyData.attackDamage);
+
+                    Debug.Log($"Enemy {name} dealt {enemyData.attackDamage} damage to the player.");
+                }
+            }
         }
     }
 }

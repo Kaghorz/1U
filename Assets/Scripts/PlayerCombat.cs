@@ -207,14 +207,14 @@ public class PlayerCombat : MonoBehaviour
         else timeSinceCast = Time.time - lastCastTime;
 
         // Verify cooldown state and mana availability before executing the cast
-        if (timeSinceCast >= selectedSpell.cooldown && stats.CanConsumeMana(selectedSpell.manaCost))
+        if (timeSinceCast >= (selectedSpell.cooldown + selectedSpell.castTime) && stats.CanConsumeMana(selectedSpell.manaCost))
         {
             stats.ConsumeMana(selectedSpell.manaCost);
             ExecuteCast(mainCamera);
         }
         else
         {
-            Debug.Log("Cannot cast " + selectedSpell.spellName + ". Cooldown or Mana not ready.");
+            Debug.Log("Cannot cast " + selectedSpell.spellName + ". Either Cooldown, or Mana, or CastTime not ready.");
         }
     }
 

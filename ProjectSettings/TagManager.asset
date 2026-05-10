@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MissionSpawnPoint
   - GamePlay_UI
+  - Boss
   layers:
   - Default
   - TransparentFX

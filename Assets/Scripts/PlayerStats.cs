@@ -1,12 +1,18 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private Animator animator;
     [Header("Health Settings")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float healthRegenRate = 5f; // Health regained per second
     [SerializeField] private float healthRegenDelay = 5f; // Seconds without taking damage before regen starts
+    [SerializeField] private float respawnDelay = 4f;
+    [SerializeField] private string respawnSceneName = "JujutsuHigh";
 
     [Header("Health UI")]
     [SerializeField] private Image healthFillImage;
@@ -33,6 +39,12 @@ public class PlayerStats : MonoBehaviour
     private float currentMana;
     private float timeSinceLastDamage;
     private float timeSinceLastStaminaConsume;
+    private bool isDead;
+
+    public bool IsDead => isDead;
+
+    private static readonly int IsDeadHash = Animator.StringToHash("isDead");
+    private static readonly int HasDiedHash = Animator.StringToHash("hasDied");
 
     private void Start()
     {
@@ -154,6 +166,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        if (isDead) return;
+
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         timeSinceLastDamage = 0f; // Reset delay timer
@@ -177,7 +191,34 @@ public class PlayerStats : MonoBehaviour
 
     private void Die()
     {
+        if (isDead) return;
+
+        isDead = true;
+        if (animator != null)
+        {
+            animator.SetTrigger(HasDiedHash);
+            animator.SetBool(IsDeadHash, true);
+        }
         Debug.Log("Player has died.");
-        // FUTURE: Trigger death animations, game over screen, etc.
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        SceneManager.LoadScene(respawnSceneName);
+
+        currentHealth = maxHealth;
+        currentStamina = maxStamina;
+        currentMana = maxMana;
+        timeSinceLastDamage = 0f;
+        timeSinceLastStaminaConsume = 0f;
+        isDead = false;
+        if (animator != null)
+        {
+            animator.SetBool(IsDeadHash, false);
+        }
+        UpdateUI();
     }
 }

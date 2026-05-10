@@ -151,9 +151,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Exit",
+                    "name": "Escape",
                     "type": "Button",
                     "id": "fd1ad75f-e404-4b26-8c2a-8e3d6a6aff4f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "9032334c-42df-4f71-851b-ed178a9c86f3",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -626,6 +635,17 @@
                 {
                     "name": "",
                     "id": "e5aec15c-1e16-4180-bee6-fb52c219537f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e547731-d48f-4301-aa2b-b7c0d7f35e4f",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",

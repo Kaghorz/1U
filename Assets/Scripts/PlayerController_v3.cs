@@ -92,6 +92,11 @@ public class PlayerController_v3 : MonoBehaviour
 
     private void Update()
     {
+        if (stats.IsDead)
+        {
+            return;
+        }
+
         // Update crosshair visibility based on whether a spell is selected
         if (crosshairUI != null)
         {
@@ -233,6 +238,10 @@ public class PlayerController_v3 : MonoBehaviour
             Debug.Log("Fight Mode " + (isFightModeEnabled ? "Enabled" : "Disabled") + " | Casting Spell: " + isCastingSpell);
 
             lastActionTime = Time.time;
+        }
+        else if (!combat.IsSpellSelected)
+        {
+            isCastingSpell = false;
         }
 
         if (isCastingSpell && attackAction.action.WasPressedThisFrame())

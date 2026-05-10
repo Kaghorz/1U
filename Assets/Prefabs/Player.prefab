@@ -196,8 +196,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735823475542431745}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40351546, y: 0, z: 0, w: 0.91497284}
-  m_LocalPosition: {x: 0, y: 2.5013504, z: -3.1938772}
+  m_LocalRotation: {x: 0.1521232, y: 0, z: 0, w: 0.98836154}
+  m_LocalPosition: {x: 0, y: 2.2517643, z: -2.4022942}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -266,7 +266,7 @@ MonoBehaviour:
     RotationDamping: {x: 0, y: 0, z: 0}
     QuaternionDamping: 1
   OrbitStyle: 0
-  Radius: 3.33
+  Radius: 2.5
   Orbits:
     Top:
       Radius: 2
@@ -292,7 +292,7 @@ MonoBehaviour:
   VerticalAxis:
     Value: 17.5
     Center: 17.5
-    Range: {x: 0, y: 45}
+    Range: {x: -10, y: 45}
     Wrap: 0
     Recentering:
       Enabled: 0
@@ -458,8 +458,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790762307480222079}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40351546, y: 0, z: 0, w: 0.91497284}
-  m_LocalPosition: {x: 0, y: 2.5013504, z: -3.1938772}
+  m_LocalRotation: {x: 0.15212321, y: 0.000000022243844, z: -1.664428e-10, w: 0.98836154}
+  m_LocalPosition: {x: 0, y: 2.1615524, z: -2.1161804}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -523,12 +523,12 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 0, y: 0, z: 0}
+    PositionDamping: {x: 0.3, y: 0, z: 0.3}
     AngularDampingMode: 1
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   OrbitStyle: 0
-  Radius: 3.33
+  Radius: 2.2
   Orbits:
     Top:
       Radius: 2
@@ -858,7 +858,7 @@ MonoBehaviour:
   groundCheckOffset: 0.4
   groundLayer:
     serializedVersion: 2
-    m_Bits: 776
+    m_Bits: 520
   airControl: 2
   airDrag: 0.98
   maxAirSpeed: 5
@@ -877,15 +877,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f2781af24ce0e4c9ee9085b87c28c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  maxHealth: 100
-  healthRegenRate: 5
-  healthRegenDelay: 5
+  animator: {fileID: 2254343714787515613}
+  maxHealth: 150
+  healthRegenRate: 20
+  healthRegenDelay: 3
+  respawnDelay: 2
+  respawnSceneName: JujutsuHigh
   healthFillImage: {fileID: 0}
   staminaBarParent: {fileID: 0}
   staminaFillImage: {fileID: 0}
-  maxStamina: 100
+  maxStamina: 150
   staminaDepleteRate: 15
-  staminaRegenRate: 15
+  staminaRegenRate: 20
   staminaRegenDelay: 1.5
   maxMana: 100
   manaRegenRate: 5
@@ -928,7 +931,7 @@ MonoBehaviour:
   attackRange: 0.5
   enemyLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
 --- !u!114 &1932106086176579506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,7 +1069,7 @@ Transform:
   m_GameObject: {fileID: 2825426446658136320}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7839999, z: 0.1500001}
+  m_LocalPosition: {x: 0, y: 1.7840004, z: 0.15000153}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

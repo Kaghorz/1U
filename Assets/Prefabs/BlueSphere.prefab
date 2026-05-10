@@ -78,8 +78,8 @@ MonoBehaviour:
   lifetime: 10
   growthDuration: 1
   targetScale: 10
-  pullRadius: 5
-  pullForce: 7
+  pullRadius: 10
+  pullForce: 10
   affectedLayers:
     serializedVersion: 2
     m_Bits: 1792

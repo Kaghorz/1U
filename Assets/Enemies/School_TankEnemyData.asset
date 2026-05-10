@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f500363489d044cb30c60973bab771, type: 3}
   m_Name: School_TankEnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  maxHealth: 200
+  maxHealth: 70
   moveSpeed: 2
   runSpeed: 4
   rotationSpeed: 5
   attackDamage: 60
-  attackRange: 5
+  attackRange: 3
   attackCooldown: 3
   hearingRange: 10
   raycastDistance: 3
